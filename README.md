@@ -3,7 +3,7 @@ pupilPlot
 
 Plots pupil data with shiny server.
 
-###How install:##
+###How to install:##
 
 ```R
 install.packages("devtools")
