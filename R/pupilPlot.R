@@ -33,6 +33,7 @@ pupilPlot = function(data = NULL,
   #Make the variables global
   alldatas <<- data
   variableNames <<- variableNames
+  excludeFromSelectors <<- excludeFromSelectors
   trialTimeVariable <<- trialTimeVariable
   sources <<- pupilSizeVariables
   samplingFrequency <<- samplingFrequency
@@ -41,6 +42,9 @@ pupilPlot = function(data = NULL,
   trialVariable <<- trialVariable
   subjectMeansInterval <<- subjectMeansInterval
 
+  #alternative:
+#   .GlobalEnv$.aecay.dataset <- dataset
+#   on.exit(rm(.aecay.dataset, envir=.GlobalEnv))
   
   outputdir <<- getwd()
   
