@@ -133,6 +133,7 @@ shinyServer(function(input, output, session) {
         farger = settings$lineColors
         
         setProgress(detail="Reducing data...", value = 0)
+        #For when processing multiple lines, code for plotting only one line below
         if (length(lines) > 0) {
           lineTypes = list()
           #browser()
@@ -187,8 +188,7 @@ shinyServer(function(input, output, session) {
             } else {
               if (!(exists("verticalLines")) & "TrialPosition" %in% names(alldatas)) trialPositions = rbind(trialPositions,getTrialPositions(alldatas,selection))
               if (nrow(datas[[i]] > samples)) datas[[i]] = datas[[i]][1:samples,]
-              if (max(datas[[i]][,2],na.rm=T) > max) max = max(datas[[i]][,2],na.rm=T)
-              if (min(datas[[i]][,2],na.rm=T) < min) min = min(datas[[i]][,2],na.rm=T)
+              
               
               if (exportsubjectmeans) {
                 sub = alldatas[eval(parse(text=selection)), eval(parse(text=paste("list(size = mean(",datasource,", na.rm=T))",sep=""))), by = c(subjectVariable, trialTimeVariable)]
@@ -201,11 +201,23 @@ shinyServer(function(input, output, session) {
                 se[i] = list(data.frame(test1[,list(se = sd(size,na.rm=T)/sqrt(.N)),by=c(trialTimeVariable)]))
                 if (nrow(se[[i]] > samples)) se[[i]] = se[[i]][1:samples,]
                 test1 = NULL
+                
+                se[[i]][,2][is.na(se[[i]][,2])] = 0
+                
+                if (max(datas[[i]][,2] + se[[i]][,2],na.rm=T) > max) max = max(datas[[i]][,2] + se[[i]][,2],na.rm=T)
+                if (min(datas[[i]][,2] - se[[i]][,2],na.rm=T) < min) min = min(datas[[i]][,2] - se[[i]][,2],na.rm=T)
+                
+              } else {
+                if (max(datas[[i]][,2],na.rm=T) > max) max = max(datas[[i]][,2],na.rm=T)
+                if (min(datas[[i]][,2],na.rm=T) < min) min = min(datas[[i]][,2],na.rm=T)
               }
+              
+              
             }
             setProgress(detail="Reducing data...", value = (90/nrow(combos))*i)
           }
         } else {
+          #Code for when we are only processing one line (non-split data)
           #browser()
           
           if (withErrorBars) {
@@ -213,11 +225,20 @@ shinyServer(function(input, output, session) {
             se[1] = list(data.frame(test1[,list(se = sd(size,na.rm=T)/sqrt(.N)),by=c(trialTimeVariable)]))
             if (nrow(se[[1]] > samples)) se[[1]] = se[[1]][1:samples,]
             test1 = NULL
+            se[[1]][,2][is.na(se[[1]][,2])] = 0
           }
           datas[1] = list(data.frame(alldatas[eval(parse(text=stri)), eval(parse(text=paste("list(size = mean(",datasource,", na.rm=T))",sep=""))), by = c(trialTimeVariable)]))
           if (nrow(datas[[1]] > samples)) datas[[1]] = datas[[1]][1:samples,]
-          min = min(datas[[1]][,2],na.rm=T)
-          max = max(datas[[1]][,2],na.rm=T)
+          
+          
+          if (withErrorBars) {
+            min = min(datas[[1]][,2] - se[[1]][,2],na.rm=T)
+            max = max(datas[[1]][,2] + se[[1]][,2],na.rm=T)
+          } else {
+            min = min(datas[[1]][,2],na.rm=T)
+            max = max(datas[[1]][,2],na.rm=T)
+          }
+          
           if (!(exists("verticalLines")) & "TrialPosition" %in% names(alldatas)) trialPositions = rbind(trialPositions,getTrialPositions(alldatas,stri))
         }
         
