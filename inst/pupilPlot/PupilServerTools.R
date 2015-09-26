@@ -5,8 +5,8 @@ getTrialPositions = function (alldatas,selector) {
   pos[,list(freq = .N, TrialTime = median(TrialTime)), by = c("TrialPosition")][freq == criteriera]
 }
 
-line_errorbar <-function(x,y,y_err,color) {
-  lines(x,y,lwd=2,col=color)
+line_errorbar <-function(x,y,y_err,color,lineWidth) {
+  lines(x,y,lwd=lineWidth,col=color)
   
   err1 <- y - y_err
   err2 <- y + y_err

@@ -30,6 +30,10 @@ pupilPlot = function(data = NULL,
                      subjectMeansInterval = c(0,trialDuration)
                      ) {
   
+  #Perform checks
+  if (is.null(data)) {stop("ERROR: data is not defined")}
+  if (!is.data.table(data)) {stop("ERROR: data is not of type data.table")}
+  
   #Make the variables global
   alldatas <<- data
   variableNames <<- variableNames
@@ -48,5 +52,5 @@ pupilPlot = function(data = NULL,
   
   outputdir <<- getwd()
   
-  shiny::runApp(system.file('pupilPlot', package='pupilPlot'))
+  shiny::runApp(system.file('pupilPlot', package='pupilPlot'), launch.browser=T)
 }

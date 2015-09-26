@@ -10,6 +10,14 @@ chooserInput <- function(inputId1, inputId2, inputId3, leftLabel, rightLabel, le
   leftChoices3 <- lapply(leftChoices3, tags$option)
   rightChoices3 <- lapply(rightChoices3, tags$option)
   
+  lineColorInputs = ""
+  part1 = '<div class="input-group colorPickers"><input id="lineColor'
+  part2 = '" type="text" value="" class="form-control" /><span class="input-group-addon"><i></i></span></div>'
+  for (lc in 1:15) {
+    str = paste(part1,as.character(lc),part2,sep="");
+    lineColorInputs = paste(lineColorInputs,str,sep="");
+  }
+  
   if (multiple)
     multiple <- "multiple"
   else
@@ -17,7 +25,11 @@ chooserInput <- function(inputId1, inputId2, inputId3, leftLabel, rightLabel, le
   
   tagList(
     singleton(tags$head(
+      tags$link(href="libs/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css", rel="stylesheet"),
+      tags$script(src="libs/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"),
+      tags$link(href="css/style.css", rel="stylesheet"),
       tags$script(src="chooser-binding.js"),
+      tags$script(src="setup.js"),
       tags$style(type="text/css",
         HTML(".chooser-container { display: inline-block;}")
       ),
@@ -78,14 +90,72 @@ chooserInput <- function(inputId1, inputId2, inputId3, leftLabel, rightLabel, le
         )
     ),
     radioButtons("datasource", "Data Source:",sources),
-    tags$br(),
+    tags$br(),tags$div(
     
       actionButton("inputId", "Draw Graph", icon = NULL),
+      actionButton("settings", "Settings", icon = NULL),
       checkboxInput("errorbars", "Error Bars", FALSE),
       checkboxInput("exportsubjectmeans", "Export Subject Means", FALSE)
+    )
     ,
-    plotOutput("distPlot",height = "600px")
+    plotOutput("distPlot",height = "600px"),
+    tags$div(
+     HTML(
+    '<div id="settingsModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+      
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">pupilPlot Settings</h4>
+        </div>
+        <div class="modal-body">
+
+          <p>Settings for the plot.</p>
+
+          <div class="input-group">  
+            <span id="legendLabelSizeLabel" class="input-group-addon">Legend label size</span>
+            <input id="legendLabelSize" type="number" class="form-control" placeholder="Legend text size" aria-describedby="legendLabelSizeLabel">
+          </div>
+
+          <div class="input-group">  
+            <span id="xyLabelSizeLabel" class="input-group-addon">X, Y label size</span>
+            <input id="xyLabelSize" type="number" class="form-control" placeholder="x, y axis text size" aria-describedby="xyLabelSizeLabel">
+          </div>
+
+          <div class="input-group">  
+            <span id="xyTicksLabelSizeLabel" class="input-group-addon">X, Y ticks label size</span>
+            <input id="xyTicksLabelSize" type="number" class="form-control" placeholder="size of tick labels" aria-describedby="xyTicksLabelSizeLabel">
+          </div>
+
+          <div class="input-group">
+            <span id="lineWidthLabel" class="input-group-addon">Line width</span>
+            <input id="lineWidth" type="number" class="form-control" placeholder="Line width" aria-describedby="lineWidthLabel">
+          </div>
+          
+           <div class="input-group">  
+            <span id="legendLabelSizeLabel" class="input-group-addon">Line colors</span>'),
+            HTML(lineColorInputs),
+          HTML('</div>
+          <script>
+              $(function(){
+                  $(".colorPickers").colorpicker();
+              });
+          </script>
+
+        </div>
+        <div class="modal-footer">
+          <button id="settingsModalCloseButton" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    
+    </div>'
+      )
+    )
+    
   )
+  
 }
 
 registerInputHandler("shinyjsexamples.chooser", function(data, ...) {

@@ -2,9 +2,67 @@ source("PupilServerTools.R")
 
 shinyServer(function(input, output, session) {
   
+  #Per session settings from defaults
+  settings = plotSettings
+  
   output$selection <- renderPrint(
     input$mychooser1
   )
+  
+  observe({
+    input$settingsModal
+    cat("Populating settings")
+    session$sendCustomMessage(type = "settingsUpdate", settings)
+  })
+  
+  obs1 <- observe({
+    if (is.na(input$lineWidth)) {return()}
+    if (!is.numeric(input$lineWidth)) {return()}
+    if (input$lineWidth == 0) {return()}
+    cat("Setting line width to", input$lineWidth,"\n")
+    settings$lineWidth <<- input$lineWidth
+  })
+  
+  obs2 <- observe({
+    if (is.na(input$xyLabelSize)) {return()}
+    if (!is.numeric(input$xyLabelSize)) {return()}
+    if (input$xyLabelSize == 0) {return()}
+    cat("Setting xyLabelSize to", input$xyLabelSize,"\n")
+    settings$xyLabelSize <<- input$xyLabelSize
+  })
+  
+  obs3 <- observe({
+    if (is.na(input$legendLabelSize)) {return()}
+    if (!is.numeric(input$legendLabelSize)) {return()}
+    if (input$legendLabelSize == 0) {return()}
+    cat("Setting legendLabelSize to", input$legendLabelSize,"\n")
+    settings$legendLabelSize <<- input$legendLabelSize
+  })
+  
+  obs4 <- observe({
+    input$lineColor1
+    lineColors = c(input$lineColor1,input$lineColor2,input$lineColor3,input$lineColor4,input$lineColor5,
+                   input$lineColor6,input$lineColor7,input$lineColor8,input$lineColor9,input$lineColor10,
+                   input$lineColor11,input$lineColor12,input$lineColor13,input$lineColor14,input$lineColor15)
+    if (sum(is.na(lineColors))) {return()}
+    for (col in 1:length(lineColors)) {
+      if (lineColors[col] == "" || nchar(lineColors[col]) == 0) {
+        return();
+      }
+    }
+    cat("Setting lineColors to", paste(lineColors,collapse = " "),length(lineColors),"\n")
+    settings$lineColors <<- lineColors
+  })
+  
+  obs5 <- observe({
+    if (is.na(input$xyTicksLabelSize)) {return()}
+    if (!is.numeric(input$xyTicksLabelSize)) {return()}
+    if (input$xyTicksLabelSize == 0) {return()}
+    cat("Setting xyTicksLabelSize to", input$xyTicksLabelSize,"\n")
+    settings$xyTicksLabelSize <<- input$xyTicksLabelSize
+  })
+  
+  
   
   output$distPlot <- renderPlot({
     
@@ -72,7 +130,7 @@ shinyServer(function(input, output, session) {
         max = -999
         min = 999
         legends = c("")
-        farger = color
+        farger = settings$lineColors
         
         setProgress(detail="Reducing data...", value = 0)
         if (length(lines) > 0) {
@@ -172,8 +230,8 @@ shinyServer(function(input, output, session) {
         minimum = min#min(min(datas[[1]]$size))
         maximum = max#max(max(datas[[1]]$size)) 
         
-        p = plot(datas[[firstNonNA]],type="n",xlab="Time (ms)",ylab="% Change from Baseline",ylim=c(minimum,maximum),main=title)
-        legend(x="topleft",col=farger[1:length(legends)],pt.bg=farger[1:length(legends)],pch=c(22,22),legend=legends,pt.cex=2,box.col="darkgrey",bg="white",cex=.8)
+        p = plot(datas[[firstNonNA]],type="n",xlab="Time (ms)",ylab="% Change from Baseline",ylim=c(minimum,maximum),main=title,cex.lab = settings$xyLabelSize, cex.axis = settings$xyTicksLabelSize)
+        legend(x="topleft",col=farger[1:length(legends)],pt.bg=farger[1:length(legends)],pch=c(22,22),legend=legends,pt.cex=2,box.col="darkgrey",bg="white",cex=settings$legendLabelSize)
         
         fargeCounter = 1
         
@@ -182,9 +240,9 @@ shinyServer(function(input, output, session) {
         for (i in 1:length(datas)) {
           if (is.na(datas[i])) next
           if (withErrorBars) {
-            line_errorbar(datas[[i]][,1],datas[[i]][,2],se[[i]][,2],farger[fargeCounter])
+            line_errorbar(datas[[i]][,1],datas[[i]][,2],se[[i]][,2],farger[fargeCounter],settings$lineWidth)
           } else {
-            lines(datas[[i]][,1],datas[[i]][,2],lwd=2,col=farger[fargeCounter])
+            lines(datas[[i]][,1],datas[[i]][,2],lwd=settings$lineWidth,col=farger[fargeCounter])
           }
           fargeCounter = fargeCounter + 1
           

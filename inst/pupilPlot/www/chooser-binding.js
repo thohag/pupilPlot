@@ -1,6 +1,10 @@
+
+
 (function() {
 
 function updateChooser(chooser) {
+
+
     chooser = $(chooser);
     var left = chooser.find("select.left");
     var right = chooser.find("select.right");
