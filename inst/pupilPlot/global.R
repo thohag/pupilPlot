@@ -34,7 +34,7 @@ setkeyv(x=alldatas, cols=c(subjectVariable,trialVariable))
 
 samples = (trialDuration/1000)*samplingFrequency
 
-defaultLineColors = c("red","darkgreen","orange","blue","yellow","brown","purple","pink",colors()[20:50])
+defaultLineColors = c("red","darkgreen","orange","blue","yellow","brown","purple","pink",colors()[25:50])
 
 defaultLineColors = apply(col2rgb(defaultLineColors), FUN=function(x) {paste("#",paste(as.character(as.hexmode(x)),collapse =""),sep="")},MARGIN=c(2))
 

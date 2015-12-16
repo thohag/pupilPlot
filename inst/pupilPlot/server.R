@@ -131,7 +131,7 @@ shinyServer(function(input, output, session) {
         min = 999
         legends = c("")
         
-        backupcolornames = colors()[20:50]
+        backupcolornames = colors()[50:100]
         backupcolors = apply(col2rgb(backupcolornames), FUN=function(x) {paste("#",paste(as.character(as.hexmode(x)),collapse =""),sep="")},MARGIN=c(2))
         farger = c(settings$lineColors, backupcolors)
         
