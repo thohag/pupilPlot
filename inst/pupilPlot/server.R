@@ -130,7 +130,7 @@ shinyServer(function(input, output, session) {
         max = -999
         min = 999
         legends = c("")
-        farger = settings$lineColors
+        farger = c(settings$lineColors, colors()[20:50])
         
         setProgress(detail="Reducing data...", value = 0)
         #For when processing multiple lines, code for plotting only one line below
