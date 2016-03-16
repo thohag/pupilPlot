@@ -27,7 +27,8 @@ pupilPlot = function(data = NULL,
                      trialDuration = 5000,
                      subjectVariable="SubjectNr",
                      trialVariable="Trial",
-                     subjectMeansInterval = c(0,trialDuration)
+                     subjectMeansInterval = c(0,trialDuration),
+                     yrange = FALSE
                      ) {
   
   #Perform checks
@@ -45,6 +46,7 @@ pupilPlot = function(data = NULL,
   subjectVariable <<- subjectVariable
   trialVariable <<- trialVariable
   subjectMeansInterval <<- subjectMeansInterval
+  yrange <<- yrange
 
   #alternative:
 #   .GlobalEnv$.aecay.dataset <- dataset

@@ -251,8 +251,16 @@ shinyServer(function(input, output, session) {
         firstNonNA = which(!is.na(legends))[1]
         legends = legends[!is.na(legends)]
         farger = farger[!is.na(farger)]
+        
         minimum = min#min(min(datas[[1]]$size))
         maximum = max#max(max(datas[[1]]$size)) 
+        
+        if (sum(yrange != FALSE) > 0 & length(yrange) == 2) {
+          minimum = yrange[1]
+          maximum = yrange[2]
+        }
+        
+        
         
         p = plot(datas[[firstNonNA]],type="n",xlab="Time (ms)",ylab="% Change from Baseline",ylim=c(minimum,maximum),main=title,cex.lab = settings$xyLabelSize, cex.axis = settings$xyTicksLabelSize)
         legend(x="topleft",col=farger[1:length(legends)],pt.bg=farger[1:length(legends)],pch=c(22,22),legend=legends,pt.cex=2,box.col="darkgrey",bg="white",cex=settings$legendLabelSize)
