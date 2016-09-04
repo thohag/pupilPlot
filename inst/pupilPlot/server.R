@@ -262,7 +262,7 @@ shinyServer(function(input, output, session) {
         
         
         
-        p = plot(datas[[firstNonNA]],type="n",xlab="Time (ms)",ylab="% Change from Baseline",ylim=c(minimum,maximum),main=title,cex.lab = settings$xyLabelSize, cex.axis = settings$xyTicksLabelSize)
+        p = plot(datas[[firstNonNA]],type="n",xlab="Time (ms)",ylab="Change in pupil (mm)",ylim=c(minimum,maximum),main=title,cex.lab = settings$xyLabelSize, cex.axis = settings$xyTicksLabelSize)
         legend(x="topleft",col=farger[1:length(legends)],pt.bg=farger[1:length(legends)],pch=c(22,22),legend=legends,pt.cex=2,box.col="darkgrey",bg="white",cex=settings$legendLabelSize)
         
         fargeCounter = 1
