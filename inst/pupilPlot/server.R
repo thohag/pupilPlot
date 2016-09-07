@@ -189,7 +189,7 @@ shinyServer(function(input, output, session) {
               #farger[i] = NA
               
             } else {
-              if (!(exists("verticalLines")) & "TrialPosition" %in% names(alldatas)) trialPositions = rbind(trialPositions,getTrialPositions(alldatas,selection))
+              if (!(exists("verticalLines")) & "TrialPosition" %in% names(alldatas)) trialPositions = rbind(trialPositions,getTrialPositions(alldatas,selection,subjectVariable))
               if (nrow(datas[[i]] > samples)) datas[[i]] = datas[[i]][1:samples,]
               
               
@@ -242,7 +242,7 @@ shinyServer(function(input, output, session) {
             max = max(datas[[1]][,2],na.rm=T)
           }
           
-          if (!(exists("verticalLines")) & "TrialPosition" %in% names(alldatas)) trialPositions = rbind(trialPositions,getTrialPositions(alldatas,stri))
+          if (!(exists("verticalLines")) & "TrialPosition" %in% names(alldatas)) trialPositions = rbind(trialPositions,getTrialPositions(alldatas,stri,subjectVariable))
         }
         
         #------------------------------------------------------------------------------------

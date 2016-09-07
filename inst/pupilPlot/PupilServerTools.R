@@ -1,8 +1,8 @@
-getTrialPositions = function (alldatas,selector) {
-  pos = alldatas[eval(parse(text=selector)), list(TrialTime = min(TrialTime, na.rm=T)), by = c("TrialPosition","Trial")]
+getTrialPositions = function (alldatas,selector,subjectVariable) {
+  pos = alldatas[eval(parse(text=selector)), list(TrialTime = min(TrialTime, na.rm=T)), by = c(subjectVariable,"Trial","TrialPosition")]
   occurances = pos[,list(TrialTime = .N), by = c("TrialPosition")][[2]]
   criteriera = as.numeric(names(table(occurances))[which.max(table(occurances))])
-  pos[,list(freq = .N, TrialTime = median(TrialTime)), by = c("TrialPosition")][freq == criteriera]
+  pos[,list(freq = .N, TrialTime = median(TrialTime)), by = c("TrialPosition")][freq >= criteriera]
 }
 
 line_errorbar <-function(x,y,y_err,color,lineWidth) {
