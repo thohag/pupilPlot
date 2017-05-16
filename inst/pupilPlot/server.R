@@ -266,8 +266,9 @@ shinyServer(function(input, output, session) {
         legend(x="topleft",col=farger[1:length(legends)],pt.bg=farger[1:length(legends)],pch=c(22,22),legend=legends,pt.cex=2,box.col="darkgrey",bg="white",cex=settings$legendLabelSize)
         
         fargeCounter = 1
-        
+        legendCounter = 1
         submeansout = data.frame()
+        
         
         for (i in 1:length(datas)) {
           if (is.na(datas[i])) next
@@ -279,9 +280,10 @@ shinyServer(function(input, output, session) {
           fargeCounter = fargeCounter + 1
           
           pos = fargeCounter
+          #browser()
           if (exportsubjectmeans) {
             test1 = submeans[[i]]
-            names(test1)[names(test1) == "size"] = trim.leading(legends[i])
+            names(test1)[names(test1) == "size"] = trim.leading(legends[legendCounter])
             #cat("i is",i,"pos is",pos,"legends is",legends,"with length",length(legends),"current legend with i is",legends[i])
             if (nrow(submeansout) == 0) {
               submeansout = test1
@@ -291,6 +293,7 @@ shinyServer(function(input, output, session) {
             }
             
           }
+          legendCounter = legendCounter + 1
         }
         if (exportsubjectmeans) {
           write.csv(submeansout,file=paste(outputdir,"subjectmeans.txt",sep=.Platform$file.sep))
